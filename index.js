@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
-
+const dotenv = require("dotenv");
+dotenv.config();   
 
 const app=express();
 
@@ -15,7 +16,8 @@ app.use("/admin",adminRouter);
 
 function main(){
     
-    mongoose.connect("mongodb+srv://abhishekmasne2015:01092002%40Ai@cluster0.aj8wd.mongodb.net/course-app")
+    const dbConnectionString = process.env.DB_CONNECTION_STRING;
+    mongoose.connect(dbConnectionString)
     app.listen(3000);
     console.log("listening on port 3000")
 }
