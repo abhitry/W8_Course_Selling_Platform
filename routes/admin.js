@@ -100,15 +100,30 @@ adminRouter.post("/createCourse",adminMiddleware,function(req,res)
 })
 adminRouter.put("/UpdateCourse",adminMiddleware,function(req,res)
 {
-    
+
+   const adminId=req.adminId;
+    const {title,description,imageUrl,price,courseId}=req.body;
+    courseModel.updateOne({_id:courseId,createorId:adminId},{
+        title:title,
+        description:description,
+        imageUrl:imageUrl,
+        price:price,
+    })
     res.json({
-        msg:"signin endpoint"
+        msg:"Course Updated ",
+        courseId:course._id
     })
 })
+
 adminRouter.get("/course/bulk",adminMiddleware,function(req,res)
 {
+    const adminId=req.adminId;
+    const courses=await courseModel.find({
+        createorId:adminId
+    })
     res.json({
-        msg:"signin endpoint"
+        msg:"Course Updated ",
+        courses:courses
     })
 })
 module.exports=({adminRouter:adminRouter})
