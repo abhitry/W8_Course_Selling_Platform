@@ -4,9 +4,10 @@ const bcrypt = require('bcrypt');
 const Router=express.Router;
 let adminRouter=Router();
 const {z}=require("zod");
-let {adminModel,courseModel}=require("./db.js");
+let {adminModel}=require("./db.js");
+let {courseModel}=require("./db.js");
 adminRouter.use(express.json())
-let { JWT_ADMIN_SECRET }=require("./courses.js")
+let { JWT_ADMIN_SECRET }=require("../config.js")
 adminRouter.use(express.json())
 let {adminMiddleware}=require("../middlewares/admin.js")
 
@@ -54,10 +55,14 @@ adminRouter.post("/signup",async function(req,res)
 adminRouter.post("/signin",async function(req,res)
 {
     const {email,password}=req.body;
-    const user=await adminModel.findOne({
-        email:email,
-    })
+    
     try{
+        const user=await adminModel.findOne({
+            email:email,
+        })
+        if (!user) {
+            return res.status(403).json({ msg: "User not found" });
+        }
         const correctuser=await bcrypt.compare(password,user.password)
         if(user && correctuser)
         {
@@ -82,28 +87,28 @@ adminRouter.post("/signin",async function(req,res)
         });
     }
 })
-adminRouter.post("/createCourse",adminMiddleware,function(req,res)
+adminRouter.post("/createCourse",adminMiddleware,async function(req,res)
 {
     const adminId=req.adminId;
     const {title,description,imageUrl,price}=req.body;
-    courseModel.create({
+    const course = await courseModel.create({
         title:title,
         description:description,
         imageUrl:imageUrl,
         price:price,
         createorId:adminId
-    })
+    });
     res.json({
         msg:"Course Created ",
         courseId:course._id
     })
 })
-adminRouter.put("/UpdateCourse",adminMiddleware,function(req,res)
+adminRouter.put("/UpdateCourse",adminMiddleware,async function(req,res)
 {
 
    const adminId=req.adminId;
     const {title,description,imageUrl,price,courseId}=req.body;
-    courseModel.updateOne({_id:courseId,createorId:adminId},{
+    const course=await courseModel.updateOne({_id:courseId,createorId:adminId},{
         title:title,
         description:description,
         imageUrl:imageUrl,
@@ -115,7 +120,7 @@ adminRouter.put("/UpdateCourse",adminMiddleware,function(req,res)
     })
 })
 
-adminRouter.get("/course/bulk",adminMiddleware,function(req,res)
+adminRouter.get("/course/bulk",adminMiddleware,async function(req,res)
 {
     const adminId=req.adminId;
     const courses=await courseModel.find({

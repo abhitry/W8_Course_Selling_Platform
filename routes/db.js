@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema=mongoose.Schema;
 const {ObjectId}=require("mongoose");
-mongoose.connect("mongodb+srv://abhishekmasne2015:01092002%40Ai@cluster0.aj8wd.mongodb.net/course-app")
+mongoose.connect("mongodb+srv://abhishekmasne2015:01092002%40Ai@cluster0.aj8wd.mongodb.net/new-course-app")
 
 const userSchema=new Schema({
     email:{type:String,unique:true},

@@ -1,20 +1,29 @@
 const express=require("express");
 const Router=express.Router;
 let courseRouter=Router();
+let {userMiddleware}=require("../middlewares/user.js")
 courseRouter.use(express.json())
+cosnt { purchaseModel }=require("./db.js")
 
-courseRouter.get("/purchase",function(req,res)
+courseRouter.get("/purchase",userMiddleware,async function(req,res)
 {
+    const userId=req.userId;
+    const courseId=req.body.courseId;
     //need to pay for purchaseing course
+    await purchaseModel.create({
+        userId:userId,
+        courseId:courseId
+    })
     res.json({
-        msg:"purchase endpoint"
+        msg:"you have succesfully purchassed the course "
     })    
 
 })
 courseRouter.get("/preview",function(req,res)
 {
+    const courses=await courseModel.find({});
     res.json({
-        msg:"preview endpoint"
+        courses 
     })    
 
 })

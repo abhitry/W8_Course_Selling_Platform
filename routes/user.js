@@ -6,7 +6,7 @@ const { userModel } = require("./db.js");
 const {z}=require("zod");
 const Router=express.Router;
 let userRouter=Router();
-let { JWT_USER_SECRET }=require("./courses.js")
+let { JWT_USER_SECRET }=require("../config.js")
 let {userMiddleware}=require("../middlewares/user.js")
 userRouter.use(express.json())
 
@@ -79,10 +79,14 @@ userRouter.post("/signin",async function(req,res)
         });
     }
 })
-userRouter.get("/purchases",userMiddleware,function(req,res)
+userRouter.get("/purchases",userMiddleware,async function(req,res)
 {   
+    const userId=req.userId;
+    const purchaseCourses= await userModel.find({
+        _id:userId
+    })
     res.json({
-        msg:"purchases endpoint"
+        purchaseCourses
     })
 
 })
