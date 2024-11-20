@@ -6,7 +6,8 @@ const { userModel } = require("./db.js");
 const {z}=require("zod");
 const Router=express.Router;
 let userRouter=Router();
-let JWT_USER_SECRET="lkjhgfdsa2345678kjhgfd"
+let { JWT_USER_SECRET }=require("./courses.js")
+let {userMiddleware}=require("../middlewares/user.js")
 userRouter.use(express.json())
 
 userRouter.post("/signup",async function(req,res)
@@ -78,7 +79,7 @@ userRouter.post("/signin",async function(req,res)
         });
     }
 })
-userRouter.get("/purchases",function(req,res)
+userRouter.get("/purchases",userMiddleware,function(req,res)
 {   
     res.json({
         msg:"purchases endpoint"

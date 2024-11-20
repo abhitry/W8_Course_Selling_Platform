@@ -4,11 +4,12 @@ const bcrypt = require('bcrypt');
 const Router=express.Router;
 let adminRouter=Router();
 const {z}=require("zod");
-let {adminModel}=require("./db.js");
+let {adminModel,courseModel}=require("./db.js");
 adminRouter.use(express.json())
-let JWT_ADMIN_SECRET="zxcvbnm,12345678"
+let { JWT_ADMIN_SECRET }=require("./courses.js")
 adminRouter.use(express.json())
-//adminRouter.use(adminMiddleware);
+let {adminMiddleware}=require("../middlewares/admin.js")
+
 
 adminRouter.post("/signup",async function(req,res)
 {
@@ -81,19 +82,30 @@ adminRouter.post("/signin",async function(req,res)
         });
     }
 })
-adminRouter.post("/create",function(req,res)
+adminRouter.post("/createCourse",adminMiddleware,function(req,res)
 {
+    const adminId=req.adminId;
+    const {title,description,imageUrl,price}=req.body;
+    courseModel.create({
+        title:title,
+        description:description,
+        imageUrl:imageUrl,
+        price:price,
+        createorId:adminId
+    })
+    res.json({
+        msg:"Course Created ",
+        courseId:course._id
+    })
+})
+adminRouter.put("/UpdateCourse",adminMiddleware,function(req,res)
+{
+    
     res.json({
         msg:"signin endpoint"
     })
 })
-adminRouter.put("/course",function(req,res)
-{
-    res.json({
-        msg:"signin endpoint"
-    })
-})
-adminRouter.get("/course/bulk",function(req,res)
+adminRouter.get("/course/bulk",adminMiddleware,function(req,res)
 {
     res.json({
         msg:"signin endpoint"
