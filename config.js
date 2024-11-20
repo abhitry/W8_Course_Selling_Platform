@@ -1,7 +1,0 @@
-let JWT_ADMIN_SECRET="zxcvbnm,12345678";
-let JWT_USER_SECRET="lkjhgfdsa2345678kjhgfd"
-
-
-module.exports={JWT_ADMIN_SECRET:JWT_ADMIN_SECRET,
-    JWT_USER_SECRET:JWT_USER_SECRET
-}
