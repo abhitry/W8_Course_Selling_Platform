@@ -1,6 +1,7 @@
 const express=require("express");
 const Router=express.Router;
 let courseRouter=Router();
+courseRouter.use(express.json())
 
 courseRouter.get("/purchase",function(req,res)
 {

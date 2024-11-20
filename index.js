@@ -14,10 +14,9 @@ app.use("/user",userRouter);
 app.use("/courses",courseRouter);
 app.use("/admin",adminRouter);
 
-function main(){
-    
+async function main(){
     const dbConnectionString = process.env.DB_CONNECTION_STRING;
-    mongoose.connect(dbConnectionString)
+    await mongoose.connect(dbConnectionString)
     app.listen(3000);
     console.log("listening on port 3000")
 }
