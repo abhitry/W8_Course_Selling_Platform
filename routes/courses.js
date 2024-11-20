@@ -3,7 +3,8 @@ const Router=express.Router;
 let courseRouter=Router();
 let {userMiddleware}=require("../middlewares/user.js")
 courseRouter.use(express.json())
-cosnt { purchaseModel }=require("./db.js")
+const { purchaseModel, courseModel } =require("./db.js")
+
 
 courseRouter.get("/purchase",userMiddleware,async function(req,res)
 {
@@ -19,7 +20,7 @@ courseRouter.get("/purchase",userMiddleware,async function(req,res)
     })    
 
 })
-courseRouter.get("/preview",function(req,res)
+courseRouter.get("/preview",async function(req,res)
 {
     const courses=await courseModel.find({});
     res.json({
